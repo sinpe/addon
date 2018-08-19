@@ -1,0 +1,30 @@
+{
+    "name": "long/addon",
+    "description": "插件管理器",
+    "keywords": ["addon"],
+    "homepage": "https://github.com/sinpe/addon",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+        "name": "Sinpe Inc.",
+        "email": "18222544@qq.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sinpe\\Addon\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "long/support": "dev-master",
+        "long/config": "dev-master",
+        "long/event": "dev-master",
+        "long/eloquent": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8.35|~5.7"
+    },
+    "minimum-stability": "dev"
+}
