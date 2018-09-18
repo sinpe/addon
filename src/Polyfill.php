@@ -2,10 +2,12 @@
 
 namespace Sinpe\Addon;
 
+use Psr\Container\ContainerInterface;
+
 use Sinpe\Event\EventManager;
 use Sinpe\Event\EventManagerInterface;
 use Sinpe\Config\ConfigInterface;
-use Sinpe\Support\ContainerInterface;
+
 
 /**
  * 系统对接集成扩展基类.

@@ -2,7 +2,7 @@
 
 namespace Sinpe\Addon;
 
-use Sinpe\Support\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Sinpe\Event\EventManagerInterface;
 
 /**
