@@ -3,13 +3,12 @@
 namespace Sinpe\Addon\Extension;
 
 use Sinpe\Eloquent\Collection;
-use Sinpe\Eloquent\Model as ModelBase;
-use Sinpe\Eloquent\Observer;
+use Sinpe\Eloquent\Model as Base;
 
 /**
  * Class Entity.
  */
-class Entity extends ModelBase
+class Entity extends Base
 {
     /**
      * Define the table name.
@@ -17,18 +16,6 @@ class Entity extends ModelBase
      * @var string
      */
     protected $table = 'addons_extensions';
-
-    /**
-     * Boot the model.
-     */
-    protected static function boot()
-    {
-        // TODO 缓存
-
-        self::observe(new Observer()); // TODO
-
-        parent::boot();
-    }
 
     /**
      * Find a extension by it's namespace or return a new
