@@ -128,7 +128,7 @@ class Manager implements ManagerInterface
         );
 
         // 生命周期函数initialize
-        $this->initialize();
+        $this->__init();
 
         $this->initDb();
 
@@ -136,11 +136,11 @@ class Manager implements ManagerInterface
     }
 
     /**
-     * initialize.
+     * __init.
      *
      * 需要额外的初始化，覆盖此方法
      */
-    protected function initialize()
+    protected function __init()
     {
         // 更多扩展
     }
