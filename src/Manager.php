@@ -132,7 +132,7 @@ class Manager implements ManagerInterface
 
         $this->initDb();
 
-        $this->getEventManager()->trigger('init.after');
+        $this->getEventManager()->dispatch('init.after');
     }
 
     /**
@@ -265,7 +265,7 @@ class Manager implements ManagerInterface
             );
         }
 
-        $this->getEventManager()->trigger(
+        $this->getEventManager()->dispatch(
             'register.after',
             $this,
             ['addons' => $this->addons]
@@ -376,7 +376,7 @@ class Manager implements ManagerInterface
                     );
                 }
 
-                $this->getEventManager()->trigger(
+                $this->getEventManager()->dispatch(
                     'addon.init.after',
                     $this,
                     ['addon' => $obj]
@@ -418,7 +418,7 @@ class Manager implements ManagerInterface
 
         $provider->register();
 
-        $this->getEventManager()->trigger(
+        $this->getEventManager()->dispatch(
             'addon.register.after',
             $this,
             ['addon' => $addonInfo]
