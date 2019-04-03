@@ -10,7 +10,7 @@ namespace Sinpe\Addon;
  * @author Sinpe Inc. <support@sinpe.com>
  * @author WuPinlong <18222544@qq.com>
  */
-interface ManagerInterface
+interface AddonManagerInterface
 {
     /**
      * 允许外部调用覆盖部分预定义的映射.

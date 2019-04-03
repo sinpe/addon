@@ -6,9 +6,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 //use Sinpe\Support\Facade;
 //use Sinpe\Eloguent\Model;
 
-use Sinpe\Support\Traits\MacroAware as MacroTrait;
-use Sinpe\Addon\Module\Entity    as ModuleEntity;
-use Sinpe\Addon\Extension\Entity as ExtensionEntity;
+use Sinpe\Addon\Module\ModuleModel;
+use Sinpe\Addon\Extension\ExtensionModel;
 
 /**
  * Class Manager.
@@ -21,10 +20,8 @@ use Sinpe\Addon\Extension\Entity as ExtensionEntity;
  * @author Sinpe, Inc. <support@sinpe.com>
  * @author Wu Pinlong  <18222544@qq.com>
  */
-class Manager implements ManagerInterface
+class AddonManager implements AddonManagerInterface
 {
-    use MacroTrait;
-
     /**
      * addon types.
      */
@@ -41,24 +38,11 @@ class Manager implements ManagerInterface
     ];
 
     /**
-     * apply modes.
-     */
-    const MODE_CONSOLE = 'console'; // 命令行模式
-    const MODE_APP = 'app'; // 网页模式
-
-    /**
      * The addon types.
      *
      * @var array
      */
     protected $types;
-
-    /**
-     * addon mode.
-     *
-     * @var string
-     */
-    private $mode = self::MODE_APP;
 
     // /**
     //  * The class maps.
@@ -86,14 +70,14 @@ class Manager implements ManagerInterface
     /**
      * The modules model.
      *
-     * @var ModuleEntity
+     * @var ModuleModel
      */
     protected $module;
 
     /**
      * The extensions model.
      *
-     * @var ExtensionEntity
+     * @var ExtensionModel
      */
     protected $extension;
 
@@ -101,38 +85,28 @@ class Manager implements ManagerInterface
      * 构造器.
      *
      * @param PolyfillInterface $polyfill  桥接对象
-     * @param ModuleEntity      $module    module模型
-     * @param ExtensionEntity   $extension extension模型
+     * @param ModuleModel       $module    module模型
+     * @param ExtensionModel    $extension extension模型
      */
     final public function __construct(
         PolyfillInterface $polyfill,
-        ModuleEntity $module,
-        ExtensionEntity $extension
+        ModuleModel $module,
+        ExtensionModel $extension,
+        array $types = []
     ) {
         $this->polyfill = $polyfill;
         $this->module = $module;
         $this->extension = $extension;
 
         // addon types
-        $this->types = array_merge(
-            self::ADDON_TYPES,
-            $this->getConfig('addon.types') ?? []
-        );
+        $this->types = array_merge(self::ADDON_TYPES, $types ?? []);
 
         $this->paths = new Paths($this);
         $this->addons = new Collection();
 
-        $this->getContainer()->set(
-            ManagerInterface::class,
-            $this
-        );
-
         // 生命周期函数initialize
         $this->__init();
 
-        $this->initDb();
-
-        $this->getEventManager()->dispatch('init.after');
     }
 
     /**
@@ -150,41 +124,10 @@ class Manager implements ManagerInterface
      *
      * 基于不同应用模式，忽略部分addon的加载和初始化
      */
-    protected function banned(array $vts, string $mode)
+    protected function banned(array $vts)
     {
         // 更多扩展
     }
-
-    /**
-     * 初始化数据库.
-     *
-     * 不是使用eloquent的请覆盖重写
-     */
-    protected function initDb()
-    {
-        $capsule = new Capsule();
-        // 数据库连接配置
-        $this->runMacro('db', [$capsule]);
-        // Make this Capsule instance available globally via static methods... (optional)
-        $capsule->setAsGlobal();
-
-        // 若绑定了事件
-        // TODO $capsule->setEventDispatcher($this->getEventManager());
-
-        $capsule->bootEloquent();
-    }
-
-    /**
-     * 允许外部调用覆盖部分预定义的映射.
-     *
-     * @return array
-     */
-    /*
-    public function maps($overrides = [])
-    {
-        return array_merge($this->binds, $overrides);
-    }
-    */
 
     /**
      * Get the addon id.
@@ -198,18 +141,6 @@ class Manager implements ManagerInterface
     protected function getAddonId($vendor, $type, $slug)
     {
         return "{$vendor}:{$type}:{$slug}";
-    }
-
-    /**
-     * Set addon run mode.
-     *
-     * @return static
-     */
-    public function setMode(string $mode)
-    {
-        $this->mode = $mode;
-
-        return $this;
     }
 
     /**
@@ -251,7 +182,7 @@ class Manager implements ManagerInterface
             $vts = $this->getVtsByPath($path);
 
             // 根据不同使用模式，忽略某些addon的加载和初始化
-            if ($this->banned($vts, $this->mode) === false) {
+            if ($this->banned($vts) === false) {
                 continue;
             }
 
@@ -502,24 +433,4 @@ class Manager implements ManagerInterface
         );
     }
 
-    /**
-     * Properties.
-     *
-     * @param string $name
-     */
-    public function __get($name)
-    {
-        switch ($name) {
-            case 'mode':
-                return $this->mode;
-        }
-
-        throw new Exception(
-            sprintf(
-                'Property "%s::%s" does not exist.',
-                get_class($this),
-                $name
-            )
-        );
-    }
 }

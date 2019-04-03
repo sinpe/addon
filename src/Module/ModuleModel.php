@@ -8,7 +8,7 @@ use Sinpe\Eloquent\Model as Base;
 /**
  * Class Entity.
  */
-class Entity extends Base
+class ModuleModel extends Base
 {
     /**
      * Define the table name.
@@ -74,15 +74,4 @@ class Entity extends Base
         return $this->where('installed', true)->get()->pluck('namespace');
     }
 
-    /**
-     * Return a new collection.
-     *
-     * @param array $items
-     *
-     * @return Collection
-     */
-    public function newCollection(array $items = [])
-    {
-        return new Collection($items);
-    }
 }
