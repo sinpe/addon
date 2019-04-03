@@ -12,7 +12,7 @@ composer:
 composer require long/addon
 ```
 
-PHP 7.0 or newer.
+PHP 7.2 or newer.
 
 用例
 -----
